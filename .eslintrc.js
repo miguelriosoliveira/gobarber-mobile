@@ -25,6 +25,8 @@ module.exports = {
 		'eslint-plugin-import-helpers',
 	],
 	rules: {
+		'no-unused-expressions': 'off',
+
 		'@typescript-eslint/explicit-function-return-type': ['error', { allowExpressions: true }],
 		'import/extensions': ['error', 'ignorePackages', { ts: 'never', tsx: 'never' }],
 		'import-helpers/order-imports': [
@@ -36,7 +38,6 @@ module.exports = {
 			},
 		],
 		'import/prefer-default-export': 'off',
-		'no-unused-expressions': 'off',
 		'prettier/prettier': 'error',
 		'react-hooks/exhaustive-deps': 'warn',
 		'react-hooks/rules-of-hooks': 'error',
