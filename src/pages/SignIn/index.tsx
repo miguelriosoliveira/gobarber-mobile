@@ -26,6 +26,7 @@ interface FormData {
 
 const SignIn: React.FC = () => {
 	const navigation = useNavigation();
+
 	const formRef = useRef<FormHandles>(null);
 	const passwordInputRef = useRef<TextInput>(null);
 
