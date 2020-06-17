@@ -18,6 +18,7 @@ import * as Yup from 'yup';
 import logo from '../../assets/logo.png';
 import Button from '../../components/Button';
 import Input from '../../components/Input';
+import { useAuth } from '../../hooks/auth';
 import getValidationErrors from '../../utils/getValidationErrors';
 
 import {
@@ -35,33 +36,39 @@ interface FormData {
 }
 
 const SignIn: React.FC = () => {
-	const navigation = useNavigation();
-
 	const formRef = useRef<FormHandles>(null);
 	const passwordInputRef = useRef<TextInput>(null);
+	const navigation = useNavigation();
+	const { signIn } = useAuth();
 
-	const handleSignIn = useCallback(async (formData: FormData) => {
-		try {
-			formRef.current?.setErrors({});
+	const handleSignIn = useCallback(
+		async (formData: FormData) => {
+			try {
+				formRef.current?.setErrors({});
 
-			const schema = Yup.object().shape({
-				email: Yup.string().required('E-mail obrigatório').email('Digite um e-mail válido'),
-				password: Yup.string().required('Senha obrigatória'),
-			});
+				const schema = Yup.object().shape({
+					email: Yup.string().required('E-mail obrigatório').email('Digite um e-mail válido'),
+					password: Yup.string().required('Senha obrigatória'),
+				});
 
-			await schema.validate(formData, { abortEarly: false });
+				await schema.validate(formData, { abortEarly: false });
 
-			// await signIn({ email: formData.email, password: formData.password });
-		} catch (err) {
-			if (err instanceof Yup.ValidationError) {
-				const errors = getValidationErrors(err);
-				formRef.current?.setErrors(errors);
-				return;
+				await signIn({ email: formData.email, password: formData.password });
+			} catch (err) {
+				if (err instanceof Yup.ValidationError) {
+					const errors = getValidationErrors(err);
+					formRef.current?.setErrors(errors);
+					return;
+				}
+
+				Alert.alert(
+					'Erro na autenticação',
+					'Ocorreu um erro ao fazer logon, cheque as credenciais',
+				);
 			}
-
-			Alert.alert('Erro na autenticação', 'Ocorreu um erro ao fazer logon, cheque as credenciais');
-		}
-	}, []);
+		},
+		[signIn],
+	);
 
 	return (
 		<>
